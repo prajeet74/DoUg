@@ -1,31 +1,48 @@
+from accounts.models import User, Profile
+
+from django.contrib.auth.password_validation import validate_password
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import CustomUser
-from django.contrib.auth.hashers import make_password
-from django.core.exceptions import ValidationError
 
-class RegistrationSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
-        fields = ['email', 'password', 'display_name']
-
-    def validate_email(self, value):
-        """
-        Ensure the email is unique.
-        """
-        if CustomUser.objects.filter(email=value).exists():
-            raise ValidationError("Email is already taken.")
-        return value
-
-    def validate_password(self, value):
-        """
-        Ensure the password is sufficiently strong (optional).
-        You can customize this as needed.
-        """
-        if len(value) < 6:
-            raise ValidationError("Password must be at least 6 characters long.")
-        return value
+        model=User
+        fields=['id','username','email']
+    
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token= super().get_token(user)
+        token['full_name'] = user.profile.full_name
+        token['username'] = user.username
+        token['email'] = user.email
+        token['bio'] = user.profile.bio
+        token['image'] = str(user.profile.image)
+        token['verified'] = user.profile.verified
+        
+        return token
+class RegisterSerilizer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only = True, required = True, validators = [validate_password])
+    password2=serializers.CharField(write_only=True, required=True)
+    
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'password', 'password2']
+        
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError(
+                {"password":"Password fields does not match"}
+            )
+            return attrs
 
     def create(self, validated_data):
-        validated_data['password'] = make_password(validated_data['password'])
-        user = CustomUser.objects.create(**validated_data)
+        user = User.objects.create(
+            username = validated_data['username'],
+            email = validated_data['email'],
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        
         return user
+    
