@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Floating Labels</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Adjust input padding for icons */
+    .form-floating .form-control {
+      padding-left: 2.5rem; /* Space for the icon */
+    }
+
+    /* Adjust label position */
+    .form-floating .form-label {
+      left: 3rem; /* Move label a little more to the right */
+      top: 50%;
+      transform: translateY(-50%);
+      transition: all 0.2s ease-in-out;
+      font-size: 1rem;
+      color: #6c757d;
+    }
+
+    /* On focus or input, label moves up */
+    .form-floating .form-control:focus ~ .form-label,
+    .form-floating .form-control:not(:placeholder-shown) ~ .form-label {
+      top: -0.6rem; /* Rests above the input box */
+      left: 2.8rem; /* Adjust to ensure label doesn't overlap the icon */
+      background-color: #fff; /* Add a background to avoid overlapping */
+      padding: 0 0.3rem; /* Padding for the label */
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #0d6efd; /* Bootstrap primary color */
+    }
+
+    /* Icons inside input fields */
+    .icon-wrapper {
+      position: absolute;
+      left: 1rem; /* Adjust the icon position */
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: #6c757d;
+    }
+
+    /* Form container background and shadow */
+    .form-container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body class="d-flex align-items-center justify-content-center vh-100 bg-light">
+
+  <!-- Container -->
+  <div class="container form-container d-flex bg-white shadow rounded">
+    
+
+    <!-- Left Section (Image) -->
+    <div class="col-md-6 gradient-bg d-flex align-items-center justify-content-center p-4">
+      <img 
+        src="/static/accounts/images/wizard.png" 
+        alt="Wizard illustration" 
+        class="img-fluid rounded shadow"
+      />
+    </div>
+
+    <!-- Right Section (Form) -->
+    <div class="col-md-6 p-5">
+      <h1 class="mb-3 fw-bold text-dark">Welcome Aboard!</h1>
+      <p class="text-secondary mb-4">
+        Sign up to explore, learn, and grow with us. Ready to dive in?
+      </p>
+
+      <!-- Google Button -->
+       <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center mb-4">Login with Google</button>
+        <img
+          src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png"
+          alt="Google"
+          class="me-2"
+          style="height: 24px;"
+        />
+        Register with Google
+      </button>
+
+      <!-- Divider -->
+      <div class="d-flex align-items-center mb-4">
+        <hr class="w-100 text-muted" />
+        <span class="mx-2 text-muted">or</span>
+        <hr class="w-100 text-muted" />
+      </div>
+
+      <!-- Email Registration -->
+      <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        <!-- Email Field with Icon -->
+        <div class="form-floating mb-4 position-relative">
+          <i class="fas fa-envelope icon-wrapper"></i>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            placeholder="Email Address"
+            required
+            value="{{ form.email.value }}"
+          />
+          <label for="email">Email Address</label>
+          {% if form.email.errors %}
+            <div class="text-danger">
+              {% for error in form.email.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      
+        <!-- Password Field with Icon -->
+        <div class="form-floating mb-4 position-relative">
+          <i class="fas fa-lock icon-wrapper"></i>
+          <input 
+            type="password" 
+            class="form-control" 
+            id="password" 
+            name="password1"
+            placeholder="Password"
+            required
+            value="{{ form.password1.value }}"
+          />
+          <label for="password">Password</label>
+          {% if form.password1.errors %}
+            <div class="text-danger">
+              {% for error in form.password1.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      
+        <!-- Confirm Password Field with Icon -->
+        <div class="form-floating mb-4 position-relative">
+          <i class="fas fa-key icon-wrapper"></i>
+          <input 
+            type="password" 
+            class="form-control" 
+            id="confirm-password" 
+            name="password2"
+            placeholder="Retype Password"
+            required
+            value="{{ form.password2.value }}"
+          />
+          <label for="confirm-password">Retype Password</label>
+          {% if form.password2.errors %}
+            <div class="text-danger">
+              {% for error in form.password2.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">
+          Next
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Font Awesome JS (for icons) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+</body>
+</html>

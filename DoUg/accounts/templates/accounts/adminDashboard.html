@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+</head>
+<body>
+    <h1>Admin Page</h1>
+
+    <!-- Check if the user is authenticated and part of Admin group -->
+    {% if user.is_authenticated %}
+        <!-- Logout Button -->
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Log Out</button>
+        </form>
+
+        <!-- Promote to Admin Button -->
+        <form method="GET" action="{% url 'promote_to_admin' %}">
+            <button type="submit">Promote Users to Admin</button>
+        </form>
+
+    {% endif %}
+</body>
+</html>
