@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -146,11 +147,13 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': '843534957382-6v040iddnmdn5rst1t2brb0nr3sj83dk.apps.googleusercontent.com',
-            'secret': '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',
-            'key': ''
-        }
-    }
+            'client_id': config('GOOGLE_CLIENT_ID'),
+            'secret': config('GOOGLE_CLIENT_SECRET'),
+            'key': '',
+        },
+        'SCOPE': ['email', 'profile'],  # Add the 'profile' scope to get first and last name
+        'AUTH_PARAMS': {'access_type': 'online'},  # Optional, but helps ensure access token is valid
+}
 }
 
 LOGIN_URL = 'login'
