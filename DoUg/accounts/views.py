@@ -25,7 +25,7 @@ def register_view(request):
     else:
         form = CustomUserCreationForm()
 
-    return render(request, 'accounts/register.html', {'form': form})
+    return render(request, 'accounts/registers.html', {'form': form})
 
 @unauthenticated_user
 def login_view(request):
@@ -56,7 +56,7 @@ def login_view(request):
     else:
         form = CustomLoginForm()
 
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'accounts/logins.html', {'form': form})
 
 
 # @login_required(login_url='login')
